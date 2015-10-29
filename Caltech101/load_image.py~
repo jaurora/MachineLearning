@@ -1,0 +1,7 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import mahotas as mh
+
+import matplotlib as mpl
+mpl.rcParams['interactive'] = True
+
