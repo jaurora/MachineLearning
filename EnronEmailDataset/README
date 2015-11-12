@@ -1,0 +1,147 @@
+Ambassador Data Challenge (11/11/2015)
+
+=== Introduction ===
+The project build a clustering model to cluster Enron employees based on the word frequency of their received emails.    
+
+=== Dataset Download ===
+Enron Email Dataset: http://www.cs.cmu.edu/~enron/enron_mail_20150507.tgz
+
+=== Requirements ===
+Software: Python 2.7+
+Python Modules: os, re, math, numpy, matplotlib, sklearn, pickle, nltk, operator
+
+=== Module Description ===
+1. preprocess.py: 
+
+def readin: 
+ - read in directory or mails recursively
+ - exclude some directories: '_sent_mail', '_sent', 'sent', 
+   'sent_items', 'contacts','deleted_items', 'all_documents', 'discussion_threads', 'personal'
+
+def getwords:
+ - extract a word bag from an email
+ - convert to lower case, exclue any stop word in stopwords.txt and digits
+ - exclue words with length smaller than 2 and greater than 20  
+ - stemmer words using Snowball Stemmer
+
+2. readin_wordbag.py
+ - get a word bag (word, count) for an employee based on her/his emails
+ - save employee list, word bags to file
+
+3. feature_extraction.py
+ - extract a word vector based on the words in word bags
+ - build a feature matrix (users vs words)
+ - save to file
+
+4. cluster.py
+ - build a cluster model to cluster employees based on their feature vector using Kmeans
+ - Plot an elbow curve on error distances vs number of clusters
+   
+=== Usage ===
+1. download and unzip the Enron email dataset
+wget http://www.cs.cmu.edu/~enron/enron_mail_20150507.tgz
+tar -xvzf enron_mail_20150507.tgz
+ 
+2. read in word bags for all employees
+python readin_wordbag.py
+
+3. extract a feature maxtrix
+python readin_wordbag.py
+
+4. build a cluster model 
+python cluster.py
+
+=== Primitive Results ===
+Cluster employees into 10 groups. There are 150 employees. The word vector includes 94910 words. The feature matrix is in shape of 150 by 94910. 
+
+Discussion:
+1. Groups with a small number of employees that are formed, can be due to two reasons:
+   a. the employee receives sufficient number of personalized emails such that to affect his word pattern
+   b. the employee work on a specilaized position (e.g. dickson-s received only picture mails, which indicates he worked on some picture related job)
+
+2. Employees in the same group are possibly working on similar projects, so that the emails they received has similar keywords
+
+3. Further imporvements:
+   a. only choosing nouns to build the feature maxtrix, so as to cluster employees regarding the kind of projects they work on   b. could only choose verb and adv to cluster employees based on their sentiment  
+
+4. Another clustering was also done by only investigating "sent mails" (not shown here). This gave a view of what the employee works on and what his/her sentiment is from his/her own words. 
+
+5. The group information  (employees, top 10 words) are shown below. The responsibility of the group is also guessed based on teh key words.
+
+Group 1: 'blair-l', 'white-s'
+Words: 'time', 'description', 'calendar', 'entry', 'standard',
+       'chairperson', 'team', 'appointment', 'outlook', 'migration'
+"Maybe" Responsibility: coordinates
+
+
+Group 2: 'arnold-j', 'kitchen-l', 'martin-t', 'mckay-b', 'pimenov-v',
+       'quenet-j', 'shankman-j', 'whalley-g'
+Words: 'company', 'dynegy', 'energy', 'trading', 'stock', 'business',
+       'credit', 'gas', 'market', 'image'
+"Maybe" Responsibility: could be the leader or manegement group since it contained a variety of keywords, such as market, trading, energy, credit
+
+Group 3: 'dickson-s'
+Words: 'mvc', 'jzuffer', 'ironworks', 'vegh', 'deyholos', 'vermin',
+       'tobia', 'frankgetman', 'disparagement', 'cocksucker'
+"Maybe" Responsibility: not available due to small number of mails
+
+Group 4: 'dean-c', 'guzman-m', 'merriss-s', 'meyers-a', 'solberg-g',
+       'williams-w3'
+Words: 'schedule', 'hour', 'iso', 'alias', 'start', 'scheduling', 'file',
+       'database', 'txt', 'log'
+"Maybe" Responsibility: schedule, database management
+
+
+Group 5: 'holst-k', 'kuykendall-t', 'staab-t'
+Words: 'font', 'size', 'class', 'face', 'helvetica', 'width', 'sportsline',
+       'href', 'fantasy', 'serif'
+"Maybe" Responsibility: copywriter
+
+Group 6: 'beck-s', 'davis-d', 'farmer-d', 'fischer-m', 'germany-c',
+       'griffith-j', 'hyvl-d', 'jones-t', 'kaminski-v', 'mann-k',
+       'nemec-g', 'rodrique-r', 'schwieger-j', 'shackleton-s', 'stclair-c',
+       'taylor-m'
+Words: 'hou', 'subject', 'corp', 'gas', 'time', 'agreement', 'mark',
+       'call', 'day', 'mail'
+"Maybe" Responsibility: coordinates
+
+Group 7: 'badeer-r', 'bailey-s', 'benson-r', 'brawner-s', 'buy-r',
+       'carson-m', 'cash-m', 'causholli-m', 'corman-s', 'crandell-s',
+       'dasovich-j', 'delainey-d', 'derrick-j', 'dorland-c', 'ermis-f',
+       'fossum-d', 'gang-l', 'geaccone-t', 'giron-d', 'haedicke-m',
+       'hain-m', 'hayslett-r', 'heard-m', 'hodge-j', 'kean-s', 'keavey-p',
+       'keiser-k', 'king-j', 'lavorato-j', 'lay-k', 'lewis-a', 'lokay-m',
+       'lokey-t', 'love-p', 'maggi-m', 'may-l', 'mccarty-d', 'mcconnell-m',
+       'mckay-j', 'mclaughlin-e', 'motley-m', 'neal-s', 'panus-s',
+       'parks-j', 'pereira-s', 'perlingiere-d', 'phanis-s', 'platter-p',
+       'rapp-b', 'richey-c', 'ring-a', 'ring-r', 'rogers-b', 'sager-e',
+       'salisbury-h', 'sanchez-m', 'sanders-r', 'scholtes-d', 'scott-s',
+       'semperger-c', 'shapiro-r', 'shively-h', 'skilling-j', 'slinger-r',
+       'south-s', 'steffes-j', 'stepenovitch-j', 'stokley-c', 'sturm-f',
+       'swerzbin-m', 'symes-k', 'townsend-j', 'tycholiz-b', 'weldon-c',
+       'whalley-l', 'whitt-m', 'williams-j', 'wolfe-j', 'ybarbo-p',
+       'zipper-a', 'zufferli-j'
+Words: 'power', 'time', 'gas', 'energy', 'email', 'mail', 'market',
+       'company', 'contact', 'call'
+"Maybe" Responsibility: power, energy
+
+Group 8: 'allen-p', 'baughman-d', 'campbell-l', 'donohoe-t', 'forney-j',
+       'gay-r', 'harris-s', 'hendrickson-s', 'hernandez-j', 'horton-s',
+       'lenhart-m', 'mims-thurston-p', 'presto-k', 'quigley-d',
+       'ruscitti-k', 'saibi-e', 'schoolcraft-d', 'smith-m', 'tholt-j',
+       'thomas-p', 'ward-k'
+Words: 'image', 'gas', 'time', 'click', 'day', 'email', 'energy', 'mail',
+       'call', 'power'
+"Maybe" Responsibility: power, energy
+
+Group 9: 'arora-h', 'bass-e', 'cuilla-m', 'donoho-l', 'gilbertsmith-d',
+       'grigsby-m', 'hyatt-k', 'lucci-p', 'reitmeyer-j', 'storey-g',
+       'watson-k'
+Words: 'font', 'size', 'face', 'width', 'email', 'gas', 'class', 'week',
+       'href', 'energy'
+"Maybe" Responsibility: copywriter
+
+Group 10: 'linder-e'
+Words: 'error', 'database', 'engine', 'schedule', 'hour', 'trans_date',
+       'trans_type', 'mkt_type', 'sc_id', 'operation'
+"Maybe" Responsibility: database
